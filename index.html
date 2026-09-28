@@ -6,12 +6,163 @@
 
     <title>Location Finder</title>
 
-    N
+    
 </head>
 
 <body>
 
+<div class="container">
 
+    <div class="card">
+
+        <div class="header">
+
+            <div class="logo">
+                📍
+            </div>
+
+            <h1>Location Finder</h1>
+
+            <p>
+                Cari informasi lokasi menggunakan MapTiler API
+            </p>
+
+        </div>
+
+
+        <div class="search">
+
+            <input
+                type="text"
+                id="locationInput"
+                placeholder="Masukkan lokasi, contoh: Bandung"
+            >
+
+            <button onclick="cariLokasi()">
+                🔍 Search
+            </button>
+
+        </div>
+
+
+        <div class="loading" id="loading">
+            ⏳ Sedang mencari lokasi...
+        </div>
+
+
+        <div class="error" id="error"></div>
+
+
+        <div class="result" id="result">
+
+            <div class="location-header">
+
+                <span>📍 LOKASI DITEMUKAN</span>
+
+                <h2 id="namaLokasi">-</h2>
+
+            </div>
+
+
+            <div class="grid">
+
+                <div class="item">
+
+                    <div class="item-title">
+                        🌎 NEGARA
+                    </div>
+
+                    <div class="item-value" id="negara">
+                        -
+                    </div>
+
+                </div>
+
+
+                <div class="item">
+
+                    <div class="item-title">
+                        🏛️ PROVINSI
+                    </div>
+
+                    <div class="item-value" id="provinsi">
+                        -
+                    </div>
+
+                </div>
+
+
+                <div class="item">
+
+                    <div class="item-title">
+                        🏘️ KECAMATAN
+                    </div>
+
+                    <div class="item-value" id="kecamatan">
+                        -
+                    </div>
+
+                </div>
+
+
+                <div class="item">
+
+                    <div class="item-title">
+                        🏙️ KOTA / KABUPATEN
+                    </div>
+
+                    <div class="item-value" id="kota">
+                        -
+                    </div>
+
+                </div>
+
+
+                <div class="item coordinate">
+
+                    <div class="item-title">
+                        🌐 KOORDINAT
+                    </div>
+
+                    <div class="coordinate-content">
+
+                        <div>
+                            <div class="item-title">
+                                Longitude
+                            </div>
+
+                            <div class="item-value" id="longitude">
+                                -
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <div class="item-title">
+                                Latitude
+                            </div>
+
+                            <div class="item-value" id="latitude">
+                                -
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer">
+            Powered by MapTiler Geocoding API
+        </div>
+
+    </div>
+
+</div>
 
 
 <script>
