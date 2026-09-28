@@ -11,5 +11,302 @@
 
 <body>
 
+
+
+
+<script>
+
+    // =====================================================
+    // MASUKKAN API KEY MAPTILER KAMU DI SINI
+    // =====================================================
+
+    const API_KEY = "p2Gk3rSP1IzY7G34HN7I";
+
+
+    async function cariLokasi() {
+
+        const input = document.getElementById("locationInput");
+
+        const lokasi = input.value.trim();
+
+        const loading = document.getElementById("loading");
+
+        const error = document.getElementById("error");
+
+        const result = document.getElementById("result");
+
+
+        // Jika input kosong
+        if (lokasi === "") {
+
+            error.innerText = "Silakan masukkan lokasi terlebih dahulu.";
+
+            error.style.display = "block";
+
+            result.style.display = "none";
+
+            return;
+        }
+
+
+        // Loading
+        loading.style.display = "block";
+
+        error.style.display = "none";
+
+        result.style.display = "none";
+
+
+        try {
+
+            /*
+                Endpoint resmi MapTiler Geocoding
+            */
+
+            const url =
+                "https://api.maptiler.com/geocoding/"
+                + encodeURIComponent(lokasi)
+                + ".json"
+                + "?key=" + API_KEY
+                + "&language=id"
+                + "&country=id"
+                + "&limit=1";
+
+
+            const response = await fetch(url);
+
+
+            // Cek response API
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "API Error: " + response.status
+                );
+
+            }
+
+
+            const data = await response.json();
+
+
+            // Cek apakah hasil ditemukan
+
+            if (
+                !data.features ||
+                data.features.length === 0
+            ) {
+
+                throw new Error("Lokasi tidak ditemukan");
+
+            }
+
+
+            const feature = data.features[0];
+
+
+            /*
+                Context berisi informasi
+                negara, provinsi, kota,
+                kecamatan, dll.
+            */
+
+            const context = feature.context || [];
+
+
+            // Fungsi mengambil data context
+
+            function ambilContext(tipe) {
+
+                const hasil = context.find(item => {
+
+                    return item.id &&
+                           item.id.startsWith(tipe);
+
+                });
+
+                return hasil ? hasil.text : "-";
+            }
+
+
+            // =========================
+            // NAMA LOKASI
+            // =========================
+
+            let nama =
+                feature.text ||
+                feature.place_name ||
+                lokasi;
+
+
+            // =========================
+            // NEGARA
+            // =========================
+
+            let negara =
+                ambilContext("country");
+
+
+            // =========================
+            // PROVINSI
+            // =========================
+
+            let provinsi =
+                ambilContext("region");
+
+
+            // =========================
+            // KECAMATAN
+            // =========================
+
+            let kecamatan =
+                ambilContext("district");
+
+
+            if (kecamatan === "-") {
+
+                kecamatan =
+                    ambilContext("county");
+
+            }
+
+
+            if (kecamatan === "-") {
+
+                kecamatan =
+                    ambilContext("locality");
+
+            }
+
+
+            // =========================
+            // KOTA / KABUPATEN
+            // =========================
+
+            let kota =
+                ambilContext("place");
+
+
+            if (kota === "-") {
+
+                kota =
+                    ambilContext("municipality");
+
+            }
+
+
+            if (kota === "-") {
+
+                kota =
+                    ambilContext("county");
+
+            }
+
+
+            // =========================
+            // KOORDINAT
+            // =========================
+
+            let longitude = "-";
+
+            let latitude = "-";
+
+
+            if (
+                feature.geometry &&
+                feature.geometry.coordinates
+            ) {
+
+                longitude =
+                    feature.geometry.coordinates[0];
+
+                latitude =
+                    feature.geometry.coordinates[1];
+
+            }
+
+
+            // =========================
+            // TAMPILKAN DATA
+            // =========================
+
+            document.getElementById("namaLokasi")
+                .innerText = nama;
+
+
+            document.getElementById("negara")
+                .innerText = negara;
+
+
+            document.getElementById("provinsi")
+                .innerText = provinsi;
+
+
+            document.getElementById("kecamatan")
+                .innerText = kecamatan;
+
+
+            document.getElementById("kota")
+                .innerText = kota;
+
+
+            document.getElementById("longitude")
+                .innerText =
+                Number(longitude).toFixed(6);
+
+
+            document.getElementById("latitude")
+                .innerText =
+                Number(latitude).toFixed(6);
+
+
+            // Tampilkan result
+
+            result.style.display = "block";
+
+        }
+
+
+        catch (err) {
+
+            console.error(err);
+
+
+            error.innerText =
+                "Gagal mengambil data. Periksa API Key atau nama lokasi.";
+
+
+            error.style.display = "block";
+
+        }
+
+
+        finally {
+
+            loading.style.display = "none";
+
+        }
+
+    }
+
+
+    // =====================================================
+    // TEKAN ENTER UNTUK SEARCH
+    // =====================================================
+
+    document
+        .getElementById("locationInput")
+        .addEventListener("keydown", function(event) {
+
+            if (event.key === "Enter") {
+
+                cariLokasi();
+
+            }
+
+        });
+
+</script>
+
 </body>
 </html>
